@@ -14,9 +14,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
+//TOP KEK M8
 public class GPS extends Activity implements LocationListener {
-public TextView out;
+
+    public TextView out;
     public LocationManager loc;
     public String provider;
     public Criteria c = new Criteria();
