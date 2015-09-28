@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">GPStest</string>
+
+    <string name="output"></string>
+    <string name="action_settings">Exit</string>
+    <string name="button">GET LOCATION</string>
+</resources>
