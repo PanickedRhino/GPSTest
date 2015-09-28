@@ -46,12 +46,6 @@ public TextView out;
             onLocationChanged(res);
         }
         else if (!isNet){
-//            isNet = true;
-//            provider = LocationManager.NETWORK_PROVIDER;
-//            loc.removeUpdates(this);
-//            loc.requestLocationUpdates(provider, 100, 1, this, this.getMainLooper());
-//            res = loc.getLastKnownLocation(provider);
-//            onLocationChanged(res);
             out.setText("GPS not working");
         }
     }
