@@ -14,8 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-//Further testing git
-//sep 28 7:54 pm ayy
 public class GPS extends Activity implements LocationListener {
 
     public TextView out;
