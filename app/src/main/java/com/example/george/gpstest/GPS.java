@@ -15,7 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 public class GPS extends Activity implements LocationListener {
-
+//lawl
     public TextView out;
     public LocationManager loc;
     public String provider;
