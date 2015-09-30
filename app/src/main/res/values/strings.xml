@@ -7,4 +7,5 @@
     <string name="button">START GPS</string>
     <string name="stop">STOP GPS</string>
     <string name="origin">SAVE CURRENT LOCATION</string>
+    <string name="maps">OPEN IN GMAPS</string>
 </resources>

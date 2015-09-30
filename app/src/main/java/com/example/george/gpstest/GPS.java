@@ -9,6 +9,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.Menu;
@@ -69,7 +70,7 @@ public class GPS extends Activity implements LocationListener {
         }
             else{
                 c.setBearingAccuracy(Criteria.ACCURACY_HIGH);
-                provider = LocationManager.GPS_PROVIDER;
+                provider = LocationManager.NETWORK_PROVIDER;
                 loc.requestLocationUpdates(provider, 1000, 0, this, null);
                 res = loc.getLastKnownLocation(provider);
                 if (res != null) {
@@ -79,9 +80,20 @@ public class GPS extends Activity implements LocationListener {
                 }
             }
     }
+    public void onMapsClick(View v) throws  SecurityException{
+        res = loc.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        if(res != null){
+            Uri gmaps = Uri.parse("geo:" + res.getLatitude() + " ," +  res.getLongitude());
+            Intent map = new Intent(Intent.ACTION_VIEW,gmaps);
+            startActivity(map);
+        }
+        else{
+            out.setText("Location not found");
+        }
+    }
 
     public void onSaveClick(View v) throws SecurityException{
-        res = loc.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        res = loc.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         if (res != null){
             saved = res;
             save.setText("Saved location: " + saved.getLatitude() + " " + saved.getLongitude());
