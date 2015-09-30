@@ -70,7 +70,7 @@ public class GPS extends Activity implements LocationListener {
         }
             else{
                 c.setBearingAccuracy(Criteria.ACCURACY_HIGH);
-                provider = LocationManager.NETWORK_PROVIDER;
+                provider = LocationManager.GPS_PROVIDER;
                 loc.requestLocationUpdates(provider, 1000, 0, this, null);
                 res = loc.getLastKnownLocation(provider);
                 if (res != null) {
@@ -81,7 +81,7 @@ public class GPS extends Activity implements LocationListener {
             }
     }
     public void onMapsClick(View v) throws  SecurityException{
-        res = loc.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        res = loc.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if(res != null){
             Uri gmaps = Uri.parse("geo:" + res.getLatitude() + " ," +  res.getLongitude());
             Intent map = new Intent(Intent.ACTION_VIEW,gmaps);
@@ -93,7 +93,7 @@ public class GPS extends Activity implements LocationListener {
     }
 
     public void onSaveClick(View v) throws SecurityException{
-        res = loc.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        res = loc.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (res != null){
             saved = res;
             save.setText("Saved location: " + saved.getLatitude() + " " + saved.getLongitude());
