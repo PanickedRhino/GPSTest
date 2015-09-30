@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">GPStest</string>
-
     <string name="output"></string>
+    <string name="saved"></string>
+    <string name="bear"></string>
     <string name="action_settings">Exit</string>
-    <string name="button">GET LOCATION</string>
+    <string name="button">START GPS</string>
+    <string name="stop">STOP GPS</string>
+    <string name="origin">SAVE CURRENT LOCATION</string>
 </resources>

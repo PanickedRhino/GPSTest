@@ -1,30 +1,58 @@
 package com.example.george.gpstest;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
-import android.content.res.Configuration;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.Criteria;
-import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
+
+
 public class GPS extends Activity implements LocationListener {
-//lawl
-    public TextView out;
+    public TextView out, save, bear;
     public LocationManager loc;
     public String provider;
     public Criteria c = new Criteria();
     public boolean isNet = false;
+    public Location res, saved;
+    public Context co =this;
+
+    public void AlertSettings(View v){
+        new AlertDialog.Builder(co)
+                .setTitle("GPS Disabled")
+                .setMessage("GPS is currently disabled. Would you like to enable GPS?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        co.startActivity(myIntent);
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gps);
+        out = (TextView) findViewById(R.id.textView);
+        save = (TextView) findViewById(R.id.textView2);
+        bear = (TextView) findViewById(R.id.textView3);
+        loc = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
      }
 
@@ -36,19 +64,38 @@ public class GPS extends Activity implements LocationListener {
     }
 
     public void onButtonClick(View v)throws SecurityException{
-        out = (TextView) findViewById(R.id.textView);
-        loc = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        c.setBearingAccuracy(Criteria.ACCURACY_HIGH);
-        provider = LocationManager.GPS_PROVIDER;
-        loc.requestLocationUpdates(provider, 1000, 0, this, null);
-        Location res = loc.getLastKnownLocation(provider);
-        if(res != null){
-            onLocationChanged(res);
+        if (!loc.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            AlertSettings(v);
         }
-        else if (!isNet){
-            out.setText("GPS not working");
-        }
+            else{
+                c.setBearingAccuracy(Criteria.ACCURACY_HIGH);
+                provider = LocationManager.GPS_PROVIDER;
+                loc.requestLocationUpdates(provider, 1000, 0, this, null);
+                res = loc.getLastKnownLocation(provider);
+                if (res != null) {
+                    onLocationChanged(res);
+                } else if (!isNet) {
+                    out.setText("Attempting to obtain fix");
+                }
+            }
     }
+
+    public void onSaveClick(View v) throws SecurityException{
+        res = loc.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if (res != null){
+            saved = res;
+            save.setText("Saved location: " + saved.getLatitude() + " " + saved.getLongitude());
+        }
+        else{
+            out.setText("Location not found");
+        }
+        onLocationChanged(res);
+    }
+
+    public void onStopClick(View v) throws SecurityException{
+      loc.removeUpdates(this);
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -70,7 +117,12 @@ public class GPS extends Activity implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        out.setText(location.toString() + location.getElapsedRealtimeNanos());
+        if(location != null) {
+            out.setText(location.getLatitude() + " " + location.getLongitude());
+        }
+        if (saved != null){
+            bear.setText("Distance: " + location.distanceTo(saved) + " Bearing: " + location.bearingTo(saved));
+        }
     }
 
     @Override
