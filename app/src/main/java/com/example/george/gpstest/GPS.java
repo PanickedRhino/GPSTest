@@ -17,15 +17,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+
 
 public class GPS extends Activity implements LocationListener {
-    public TextView out, save, bear;
+    public TextView out, save, bear, base;
     public LocationManager loc;
     public String provider;
     public Criteria c = new Criteria();
     public boolean isNet = false;
     public Location res, saved;
     public Context co =this;
+    public Firebase locref;
 
     public void AlertSettings(View v){
         new AlertDialog.Builder(co)
@@ -48,14 +54,27 @@ public class GPS extends Activity implements LocationListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
+        Firebase.setAndroidContext(this);
+        locref = new Firebase("https://torrid-torch-6704.firebaseio.com/");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gps);
         out = (TextView) findViewById(R.id.textView);
         save = (TextView) findViewById(R.id.textView2);
         bear = (TextView) findViewById(R.id.textView3);
+        base = (TextView) findViewById(R.id.textView4);
         loc = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        locref.child("message").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                base.setText(dataSnapshot.getValue().toString());
+            }
 
-     }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -106,6 +125,12 @@ public class GPS extends Activity implements LocationListener {
 
     public void onStopClick(View v) throws SecurityException{
       loc.removeUpdates(this);
+    }
+
+    public void onBaseClick(View v){
+        //Firebase f = locref.push(); references id
+        locref.child("message").setValue("Do you have data? You'll love Firebase.");
+
     }
 
 

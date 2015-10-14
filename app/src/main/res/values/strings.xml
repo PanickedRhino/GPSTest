@@ -8,4 +8,6 @@
     <string name="stop">STOP GPS</string>
     <string name="origin">SAVE CURRENT LOCATION</string>
     <string name="maps">OPEN IN GMAPS</string>
+    <string name="base">TEST FIREBASE</string>
+    <string name="baseout">base output</string>
 </resources>

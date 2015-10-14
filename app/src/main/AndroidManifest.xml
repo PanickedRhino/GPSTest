@@ -4,6 +4,7 @@
     package="com.example.george.gpstest" >
     <uses-sdk android:minSdkVersion="15" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
