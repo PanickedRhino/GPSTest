@@ -9,6 +9,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -26,6 +27,16 @@ public class GPS extends Activity implements LocationListener {
     public Location res, saved;
     public Context co =this;
     String prov = LocationManager.GPS_PROVIDER;
+
+    public void switchProvider(View v){
+        if(prov.equals(LocationManager.GPS_PROVIDER)){
+            prov = LocationManager.NETWORK_PROVIDER;
+        }
+        else{
+            prov = LocationManager.GPS_PROVIDER;
+        }
+    }
+
 
     public void AlertSettings(View v){
         new AlertDialog.Builder(co)
