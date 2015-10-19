@@ -21,11 +21,11 @@ import android.widget.TextView;
 public class GPS extends Activity implements LocationListener {
     public TextView out, save, bear;
     public LocationManager loc;
-    public String provider;
     public Criteria c = new Criteria();
     public boolean isNet = false;
     public Location res, saved;
     public Context co =this;
+    String prov = LocationManager.GPS_PROVIDER;
 
     public void AlertSettings(View v){
         new AlertDialog.Builder(co)
@@ -70,9 +70,8 @@ public class GPS extends Activity implements LocationListener {
         }
             else{
                 c.setBearingAccuracy(Criteria.ACCURACY_HIGH);
-                provider = LocationManager.GPS_PROVIDER;
-                loc.requestLocationUpdates(provider, 1000, 0, this, null);
-                res = loc.getLastKnownLocation(provider);
+                loc.requestLocationUpdates(prov, 1000, 0, this, null);
+                res = loc.getLastKnownLocation(prov);
                 if (res != null) {
                     onLocationChanged(res);
                 } else if (!isNet) {
@@ -81,10 +80,11 @@ public class GPS extends Activity implements LocationListener {
             }
     }
     public void onMapsClick(View v) throws  SecurityException{
-        res = loc.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        res = loc.getLastKnownLocation(prov);
         if(res != null){
-            Uri gmaps = Uri.parse("geo:" + res.getLatitude() + " ," +  res.getLongitude());
-            Intent map = new Intent(Intent.ACTION_VIEW,gmaps);
+            Uri locr = Uri.parse("geo:" + res.getLatitude() + "," +  res.getLongitude());
+            Intent map = new Intent(Intent.ACTION_VIEW);
+            map.setData(locr);
             startActivity(map);
         }
         else{
@@ -93,7 +93,7 @@ public class GPS extends Activity implements LocationListener {
     }
 
     public void onSaveClick(View v) throws SecurityException{
-        res = loc.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        res = loc.getLastKnownLocation(prov);
         if (res != null){
             saved = res;
             save.setText("Saved location: " + saved.getLatitude() + " " + saved.getLongitude());
