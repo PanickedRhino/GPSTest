@@ -9,6 +9,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -22,6 +23,8 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import java.util.concurrent.Executors;
+
 
 public class GPS extends Activity implements LocationListener {
     public TextView out, save, bear, base;
@@ -31,7 +34,7 @@ public class GPS extends Activity implements LocationListener {
     public boolean isNet = false;
     public Location res, saved;
     public Context co =this;
-    public Firebase locref;
+    public Firebase f, locref;
 
     public void AlertSettings(View v){
         new AlertDialog.Builder(co)
@@ -63,10 +66,14 @@ public class GPS extends Activity implements LocationListener {
         bear = (TextView) findViewById(R.id.textView3);
         base = (TextView) findViewById(R.id.textView4);
         loc = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        locref.child("message").addValueEventListener(new ValueEventListener() {
+        locref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                base.setText(dataSnapshot.getValue().toString());
+                Location r;
+                r = (Location)dataSnapshot.getValue();
+                if (r != null) {
+                    save.setText(r.getLatitude() + ", " + r.getLongitude());
+                }
             }
 
             @Override
@@ -127,9 +134,11 @@ public class GPS extends Activity implements LocationListener {
       loc.removeUpdates(this);
     }
 
-    public void onBaseClick(View v){
+    public void onBaseClick(View v) throws SecurityException{
         //Firebase f = locref.push(); references id
-        locref.child("message").setValue("Do you have data? You'll love Firebase.");
+        Location l = loc.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        if(l != null)
+        f.setValue(l);
 
     }
 
