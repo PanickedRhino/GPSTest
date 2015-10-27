@@ -23,6 +23,7 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 
 
@@ -34,7 +35,9 @@ public class GPS extends Activity implements LocationListener {
     public boolean isNet = false;
     public Location res, saved;
     public Context co =this;
-    public Firebase f, locref;
+    public Firebase locref;
+    public String name = "fam";
+    public ArrayList<LocObj> list;
 
     public void AlertSettings(View v){
         new AlertDialog.Builder(co)
@@ -66,15 +69,26 @@ public class GPS extends Activity implements LocationListener {
         bear = (TextView) findViewById(R.id.textView3);
         base = (TextView) findViewById(R.id.textView4);
         loc = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        list = new ArrayList<LocObj>();
+    }
+
+    public void baseListener(View v){
         locref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Location r;
-                r = (Location)dataSnapshot.getValue();
-                if (r != null) {
-                    save.setText(r.getLatitude() + ", " + r.getLongitude());
-                }
+                list.clear();
+                for(DataSnapshot d : dataSnapshot.getChildren())
+                    list.add(d.getValue(LocObj.class));
+
+                LocObj result = list.get(0);
+                Location r = new Location(LocationManager.NETWORK_PROVIDER);
+                r.setLatitude(result.getLat());
+                r.setLongitude(result.getLongt());
+                r.setTime(result.getTime());
+                base.setText(r.toString());
             }
+
+
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
@@ -82,7 +96,6 @@ public class GPS extends Activity implements LocationListener {
             }
         });
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -91,6 +104,7 @@ public class GPS extends Activity implements LocationListener {
     }
 
     public void onButtonClick(View v)throws SecurityException{
+        baseListener(v);
         if (!loc.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             AlertSettings(v);
         }
@@ -135,10 +149,11 @@ public class GPS extends Activity implements LocationListener {
     }
 
     public void onBaseClick(View v) throws SecurityException{
-        //Firebase f = locref.push(); references id
         Location l = loc.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        if(l != null)
-        f.setValue(l);
+        if(l != null){
+            LocObj loco = new LocObj(l.getLatitude(), l.getLongitude(), l.getTime());
+            locref.child(name).setValue(loco);
+        }
 
     }
 
