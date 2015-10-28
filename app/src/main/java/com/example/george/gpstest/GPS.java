@@ -35,9 +35,9 @@ public class GPS extends Activity implements LocationListener {
     public boolean isNet = false;
     public Location res, saved;
     public Context co =this;
-    public Firebase locref;
-    public String name = "fam";
-    public ArrayList<LocObj> list;
+    public Firebase locref, f;
+    public String name = "wew";
+    public static ArrayList<LocObj> list;
 
     public void AlertSettings(View v){
         new AlertDialog.Builder(co)
@@ -57,6 +57,12 @@ public class GPS extends Activity implements LocationListener {
                 .show();
     }
 
+    public void onListClick(View v){
+        base.setText("");
+        for(LocObj c:list){
+            base.setText(base.getText().toString() + c.getLat() + ", " + c.getLongt() + ": " + c.getTime() + "\n");
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -69,10 +75,11 @@ public class GPS extends Activity implements LocationListener {
         bear = (TextView) findViewById(R.id.textView3);
         base = (TextView) findViewById(R.id.textView4);
         loc = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        list = new ArrayList<LocObj>();
+        list = new ArrayList<>();
     }
 
     public void baseListener(View v){
+        f = locref.push();
         locref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -80,12 +87,6 @@ public class GPS extends Activity implements LocationListener {
                 for(DataSnapshot d : dataSnapshot.getChildren())
                     list.add(d.getValue(LocObj.class));
 
-                LocObj result = list.get(0);
-                Location r = new Location(LocationManager.NETWORK_PROVIDER);
-                r.setLatitude(result.getLat());
-                r.setLongitude(result.getLongt());
-                r.setTime(result.getTime());
-                base.setText(r.toString());
             }
 
 
@@ -150,9 +151,9 @@ public class GPS extends Activity implements LocationListener {
 
     public void onBaseClick(View v) throws SecurityException{
         Location l = loc.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        if(l != null){
+        if(l != null && f != null){
             LocObj loco = new LocObj(l.getLatitude(), l.getLongitude(), l.getTime());
-            locref.child(name).setValue(loco);
+            f.setValue(loco);
         }
 
     }

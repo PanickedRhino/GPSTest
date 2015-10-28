@@ -19,7 +19,9 @@
         android:id="@+id/button2"
         android:onClick="onSaveClick"
         android:layout_below="@+id/button"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        />
 
     <TextView
         android:layout_width="wrap_content"
@@ -27,7 +29,9 @@
         android:text="@string/saved"
         android:id="@+id/textView2"
         android:layout_below="@+id/button2"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        />
 
     <TextView
         android:layout_width="wrap_content"
@@ -35,7 +39,9 @@
         android:text="@string/bear"
         android:id="@+id/textView3"
         android:layout_below="@+id/textView2"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        />
 
     <Button
         android:layout_width="wrap_content"
@@ -44,7 +50,9 @@
         android:id="@+id/button"
         android:onClick="onButtonClick"
         android:layout_below="@+id/textView"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        />
 
     <Button
         android:layout_width="wrap_content"
@@ -53,7 +61,9 @@
         android:id="@+id/button3"
         android:onClick="onStopClick"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        />
     <Button android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text = "@string/maps"
@@ -61,6 +71,8 @@
         android:layout_alignParentStart="true"
         android:layout_below="@id/textView3"
         android:onClick="onMapsClick"
+        android:layout_alignParentLeft="true"
+
         />
 
     <Button
@@ -83,6 +95,16 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="43dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="OPEN LIST"
+        android:id="@+id/button5"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:onClick="onListClick" />
 
 
 </RelativeLayout>
