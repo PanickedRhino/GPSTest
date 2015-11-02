@@ -2,6 +2,7 @@ package com.example.george.gpstest;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import java.text.DateFormat;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,12 +19,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.ext.CoreXMLDeserializers;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.concurrent.Executors;
 
 
@@ -58,16 +63,22 @@ public class GPS extends Activity implements LocationListener {
     }
 
     public void onListClick(View v){
+
         base.setText("");
         for(LocObj c:list){
-            base.setText(base.getText().toString() + c.getLat() + ", " + c.getLongt() + ": " + c.getTime() + "\n");
+            Date d = new Date(c.getTime());
+            DateFormat df = DateFormat.getDateTimeInstance();
+            base.setText(base.getText().toString() + c.getLat() + ", " + c.getLongt() + ": " + df.format(d) + "\n");
         }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         Firebase.setAndroidContext(this);
+
         locref = new Firebase("https://torrid-torch-6704.firebaseio.com/");
+
+        baseListener(this.getCurrentFocus());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gps);
         out = (TextView) findViewById(R.id.textView);
@@ -105,7 +116,7 @@ public class GPS extends Activity implements LocationListener {
     }
 
     public void onButtonClick(View v)throws SecurityException{
-        baseListener(v);
+
         if (!loc.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             AlertSettings(v);
         }
