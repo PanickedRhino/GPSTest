@@ -17,6 +17,7 @@ import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ext.CoreXMLDeserializers;
@@ -39,10 +40,12 @@ public class GPS extends Activity implements LocationListener {
     public Criteria c = new Criteria();
     public boolean isNet = false;
     public Location res, saved;
+    public EditText namet;
     public Context co =this;
     public Firebase locref, f;
     public String name = "wew";
     public static ArrayList<LocObj> list;
+    public static ArrayList<String> names;
 
     public void AlertSettings(View v){
         new AlertDialog.Builder(co)
@@ -68,7 +71,8 @@ public class GPS extends Activity implements LocationListener {
         for(LocObj c:list){
             Date d = new Date(c.getTime());
             DateFormat df = DateFormat.getDateTimeInstance();
-            base.setText(base.getText().toString() + c.getLat() + ", " + c.getLongt() + ": " + df.format(d) + "\n");
+            int nameIndex = list.indexOf(c);
+            base.setText(base.getText().toString() +names.get(nameIndex) + " @ \n" +  c.getLat() + ", " + c.getLongt() + ": " + df.format(d) + "\n");
         }
     }
 
@@ -84,20 +88,28 @@ public class GPS extends Activity implements LocationListener {
         out = (TextView) findViewById(R.id.textView);
         save = (TextView) findViewById(R.id.textView2);
         bear = (TextView) findViewById(R.id.textView3);
+        namet = (EditText)findViewById(R.id.editText);
+        namet.setText(name);
         base = (TextView) findViewById(R.id.textView4);
         loc = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
         list = new ArrayList<>();
+
+        names = new ArrayList<>();
     }
 
     public void baseListener(View v){
-        f = locref.push();
+
         locref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 list.clear();
-                for(DataSnapshot d : dataSnapshot.getChildren())
+                names.clear();
+                for(DataSnapshot d : dataSnapshot.getChildren()) {
                     list.add(d.getValue(LocObj.class));
+                    names.add(d.getKey());
 
+                }
             }
 
 
@@ -161,10 +173,15 @@ public class GPS extends Activity implements LocationListener {
     }
 
     public void onBaseClick(View v) throws SecurityException{
-        Location l = loc.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        name = namet.getText().toString();
+        f = locref.child(name);
+        Location l = saved;
         if(l != null && f != null){
             LocObj loco = new LocObj(l.getLatitude(), l.getLongitude(), l.getTime());
             f.setValue(loco);
+        }
+        else{
+            base.setText("Not found");
         }
 
     }

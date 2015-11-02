@@ -8,7 +8,7 @@
     <string name="stop">STOP GPS</string>
     <string name="origin">SAVE CURRENT LOCATION</string>
     <string name="maps">OPEN IN GMAPS</string>
-    <string name="base">TEST FIREBASE</string>
+    <string name="base">TEST FIREBASE WITH NAME:</string>
     <string name="baseout">base output</string>
     <string name="title_activity_users_list">users_list</string>
 
